@@ -1,0 +1,18 @@
+{
+  "name": "elyza-client",
+  "version": "1.0.0",
+  "description": "IRC Client Library for Elyza",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "irc"
+  ],
+  "author": "Bowserinator",
+  "license": "MIT",
+  "dependencies": {
+    "linkedlist": "^1.0.1",
+    "irc-stream-parser": "^0.1.0"
+  }
+}
