@@ -5,16 +5,6 @@
  * which can be found at the following url:
  * https://github.com/hellomouse/otherbot-new
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS
- * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
- * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
- * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
- * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
- * OF THIS SOFTWARE.
- *
  * (c) Hellomouse 2019
  */
 
@@ -22,17 +12,21 @@ const EventEmitter = require('events');
 const LinkedList = require('linkedlist');
 
 // TODO: per-channel queues
-/* main queue fetches items from per-channel queues
+/*
+ * Nain queue fetches items from per-channel queues
  * classes: Queue, FeederQueue
+ *
  * Queue#opts.queues takes 2d array of FeederQueues in order of priority
  * writing to queues done by functions
- * only global Queue runs timers, FeederQueues wrap around QueueItems
- * example:
+ * Only global Queue runs timers, FeederQueues wrap around QueueItems
+ *
+ * Example:
  * QueueItem {
  *   timeout: [Number representing time],
  *   data: [String for data]
  * }
  */
+
 /** Represents a message queue for the client */
 class MessageQueue extends EventEmitter {
     /**
@@ -49,13 +43,18 @@ class MessageQueue extends EventEmitter {
         this.delay = opts.delay;
         this.processFn = opts.processFn;
         this.queues = [];
-        for (let i = 0; i < opts.queueNum; i++) this.queues.push(new LinkedList());
+
+        for (let i = 0; i < opts.queueNum; i++)
+            this.queues.push(new LinkedList());
+
         /** Time of last sent message */
         this._lastSend = 0;
+
         /** How many messages have been sent as part of the "burst" */
         this._burstCount = 0;
         this._currentTimer = null;
     }
+
     /**
      * Add an object to the queue
      * @param {any} data Object to push to the queue
@@ -69,26 +68,30 @@ class MessageQueue extends EventEmitter {
             this._timerStart();
         });
     }
+
     /**
      * Get the next item from the queue, by priority
      * @return {any} The item taken from the queue
      */
     _next() {
-        // find next piece of data in queue
+        // Find next piece of data in queue
         for (let i = 0; i < this.queueNum; i++) {
             if (this.queues[i].length > 0) return this.queues[i].pop();
         }
     }
+
     /** Process new items in queue */
     _timerStart() {
         // if a timer is already running, return
         if (this._currentTimer) return;
         this._timerNext();
     }
+    
     /** Called by timer to process next item in queue */
     _timerNext() {
 
     }
+
     /** Called by timer after there is no more data */
     _timerFinished() {
 

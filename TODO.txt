@@ -1,0 +1,14 @@
+Auth SASL:
+    ).on('AUTHENTICATE', function(head,msg,from) {
+			bot.send("AUTHENTICATE "+new Buffer(bot.config.sasluser+'\0'+bot.config.sasluser+'\0'+bot.config.password).toString('base64'));
+		}).on('903', function(head,msg,from) {
+			bot.send("CAP END");
+			bot.events.emit('capend',bot.server.capreq);
+		}).on('904', function(head,msg,from) {
+			console.log('[FATAL] SASL authentication failed!');
+			throw new Error("SASL authentication failed!");
+		}).on('001', function(capreq) {
+			bot.events.emit('regdone');
+			if (bot.config.channels != undefined) {
+				bot.send('JOIN '+bot.config.channels);
+			}
